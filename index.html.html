@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffd6e8">
+<title>Happy Birthday, Madam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@300;400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #d6336c;
+    --pink-soft: #ff9fbe;
+    --rose: #ff7fae;
+    --cream: #fffdf7;
+    --ink: #4a3428;
+    --muted: #7d6553;
+    --violet: #8b5cf6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { min-height: 100%; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Quicksand", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    background-color: #ffd6e8;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image: url("bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: saturate(1.22) contrast(1.08) brightness(1.07);
+    pointer-events: none;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 42%, transparent 32%, rgba(120, 30, 75, .16) 100%),
+      linear-gradient(180deg, rgba(255, 240, 247, .12), rgba(255, 215, 235, .05));
+  }
+
+  .scene {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .envelope {
+    position: relative;
+    width: min(82vw, 400px);
+    aspect-ratio: 921 / 853;
+    cursor: pointer;
+    filter: drop-shadow(0 24px 34px rgba(120, 30, 75, .32));
+    transition: transform .35s ease, opacity .45s ease, filter .3s ease;
+    outline: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .envelope-art {
+    position: absolute;
+    inset: 0;
+    background-image: url("envelope-art.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: heartbeat 1.7s ease-in-out infinite;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  .envelope:hover,
+  .envelope:focus-visible {
+    transform: translateY(-5px) scale(1.015);
+    filter: drop-shadow(0 28px 40px rgba(120, 30, 75, .38)) brightness(1.04);
+  }
+
+  body.open .envelope {
+    transform: translateY(14px) scale(.96);
+    opacity: .85;
+  }
+
+  body.open .envelope-art { animation-play-state: paused; }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    8%  { transform: scale(1.045); }
+    16% { transform: scale(1); }
+    24% { transform: scale(1.07); }
+    38% { transform: scale(1); }
+    62% { transform: scale(1.012); }
+    74% { transform: scale(1); }
+  }
+
+  .hint {
+    margin-top: 36px;
+    font-family: "Caveat", "Segoe Script", cursive;
+    font-size: clamp(20px, 4.5vw, 26px);
+    color: #4a2f1f;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, .9), 0 0 14px rgba(255, 255, 255, .85);
+    animation: pulse 2s ease-in-out infinite;
+    transition: opacity .4s ease;
+  }
+
+  body.open .hint { opacity: 0; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: .65; transform: translateY(0); }
+    50%      { opacity: 1;   transform: translateY(-3px); }
+  }
+
+  .letter-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    background: rgba(70, 20, 50, .28);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .5s ease, visibility .5s;
+  }
+
+  body.reveal .letter-overlay { opacity: 1; visibility: visible; }
+
+  .letter-shell {
+    position: relative;
+    width: min(92vw, 58vh, 540px);
+    transform: translateY(28px) scale(.94) rotate(-1.2deg);
+    transition: transform .65s cubic-bezier(.2, .9, .25, 1.05);
+  }
+
+  body.reveal .letter-shell { transform: translateY(0) scale(1) rotate(0); }
+
+  .letter-shell::before {
+    content: "";
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    width: 122px;
+    height: 32px;
+    transform: translateX(-50%) rotate(-2deg);
+    border-radius: 4px;
+    background:
+      repeating-linear-gradient(45deg, rgba(255, 255, 255, .18) 0 6px, transparent 6px 12px),
+      linear-gradient(180deg, rgba(244, 232, 204, .9), rgba(224, 203, 162, .9));
+    box-shadow: 0 2px 8px rgba(120, 90, 50, .16);
+    z-index: 2;
+  }
+
+  .letter-card {
+    position: relative;
+    aspect-ratio: 736 / 1041;
+    max-height: 86vh;
+    overflow-y: auto;
+    padding: clamp(34px, 6vw, 54px) clamp(28px, 6vw, 54px);
+    border-radius: 5px 7px 4px 6px;
+    background-color: #fdf6e3;
+    background-image:
+      linear-gradient(180deg, rgba(255, 252, 245, .22), rgba(255, 252, 245, .10)),
+      url("letter.jpg");
+    background-size: auto, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    box-shadow:
+      0 30px 80px rgba(120, 20, 70, .35),
+      inset 0 1px 0 rgba(255, 255, 255, .7),
+      0 0 0 1px rgba(180, 140, 90, .18);
+    scrollbar-width: thin;
+    scrollbar-color: #d8b98a transparent;
+  }
+
+  .letter-card::-webkit-scrollbar { width: 8px; }
+  .letter-card::-webkit-scrollbar-thumb { background: #d8b98a; border-radius: 8px; }
+
+  .letter-card h1 {
+    font-family: "Caveat", "Segoe Script", cursive;
+    font-weight: 700;
+    font-size: clamp(38px, 8.5vw, 60px);
+    line-height: 1.02;
+    color: #4a2f1f;
+    margin-bottom: 6px;
+    transform: rotate(-.6deg);
+    transform-origin: left center;
+  }
+
+  .letter-card h1 span {
+    display: inline-block;
+    color: #8b5e3c;
+    text-decoration: underline wavy rgba(139, 94, 60, .4);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 7px;
+  }
+
+  .divider {
+    color: rgba(139, 94, 60, .65);
+    font-family: "Caveat", "Segoe Script", cursive;
+    font-size: 16px;
+    letter-spacing: 8px;
+    margin: 8px 0 20px;
+    padding-left: 8px;
+    transform: rotate(-1deg);
+  }
+
+  .letter-card p {
+    font-family: "Kalam", "Comic Sans MS", "Segoe Script", cursive;
+    font-weight: 400;
+    font-size: clamp(17px, 3.7vw, 20px);
+    line-height: 1.7;
+    letter-spacing: .2px;
+    color: #4a3527;
+    margin-bottom: 14px;
+  }
+
+  .letter-card .greeting {
+    font-size: clamp(20px, 4.4vw, 24px);
+    color: #3f2a1d;
+    margin-bottom: 12px;
+  }
+
+  .letter-card .signature {
+    font-family: "Caveat", "Segoe Script", cursive;
+    font-weight: 700;
+    font-size: clamp(28px, 5.5vw, 36px);
+    line-height: 1.2;
+    color: #7a4e2d;
+    text-align: right;
+    margin-top: 26px;
+    margin-bottom: 4px;
+    transform: rotate(-1.5deg);
+  }
+
+  .letter-card .ps {
+    font-family: "Kalam", "Comic Sans MS", "Segoe Script", cursive;
+    font-size: clamp(15px, 3.2vw, 17px);
+    font-style: normal;
+    color: #7d6553;
+    margin-top: 16px;
+    margin-bottom: 0;
+    transform: rotate(-.4deg);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    z-index: 3;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .85);
+    color: #5a3a26;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 6px 16px rgba(120, 20, 70, .2);
+    transition: transform .2s ease, background .2s ease;
+  }
+
+  .close-btn:hover { transform: rotate(90deg) scale(1.08); background: #fff; }
+
+  .carnation {
+    position: fixed;
+    z-index: 25;
+    width: 80px;
+    height: 80px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.05);
+    animation-name: carnationBurst;
+    animation-timing-function: cubic-bezier(.18, .89, .32, 1.05);
+    animation-fill-mode: forwards;
+    will-change: transform, opacity;
+    filter: drop-shadow(0 10px 16px rgba(90, 45, 120, .22));
+  }
+
+  .carnation svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+  
+  @media (prefers-reduced-motion: reduce) {
+    .hint, .envelope-art { animation: none; }
+    .envelope, .letter-shell, .letter-overlay { transition-duration: .01ms; }
+  }
+</style>
+</head>
+<body>
+  <main class="scene">
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open the birthday letter">
+      <div class="envelope-art" aria-hidden="true"></div>
+    </div>
+    <p class="hint">Tap the envelope to open</p>
+  </main>
+
+   <div class="letter-overlay" id="overlay">
+    <div class="letter-shell">
+      <article class="letter-card">
+        <h1>Happy Birthday,<br><span>Tin!</span></h1>
+        <div class="divider" aria-hidden="true">♥</div>
+        <p class="greeting">My Dearest, Kristina</p>
+        <p>Happy birthday! I just want to say how much you mean to me even though we don't know each other that well. I'm always thanking the heavens that I've gotten to know you.</p>
+        <p>Please always remember that bad days are temporary, and when life starts to feel good again, I hope you'll embrace it because you deserve all the good things in life.</p>
+        <p>I hope 19 treats you well, I'm always praying for your better days and for your good health.</p>
+        <p>Please know that you'll always have me— a soft place to land, a shoulder to lean on, and someone you can run to if the world is too messy for you— I'll be your always in all ways.</p>
+        <p>Happy birthday ulit, madam ko! I wish you all the best.</p>
+      </article>
+    </div>
+    <button class="close-btn" id="closeBtn" aria-label="Close the letter">×</button>
+  </div>
+
+  <audio id="song" loop preload="none">
+    <source src="14.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const body = document.body;
+    const envelope = document.getElementById("envelope");
+    const overlay = document.getElementById("overlay");
+    const closeBtn = document.getElementById("closeBtn");
+    const song = document.getElementById("song");
+
+    let audioCtx = null;
+    let melodyTimer = null;
+    let fallbackMode = false;
+    let isOpen = false;
+    let opening = false;
+    let revealTimer = null;
+
+    const NOTE = {
+      G4: 392.00,
+      A4: 440.00,
+      B4: 493.88,
+      C5: 523.25,
+      D5: 587.33,
+      E5: 659.25,
+      F5: 698.46,
+      G5: 783.99
+    };
+
+    const MELODY = [
+      ["G4", .5], ["G4", .5], ["A4", 1], ["G4", 1], ["C5", 1], ["B4", 2],
+      ["G4", .5], ["G4", .5], ["A4", 1], ["G4", 1], ["D5", 1], ["C5", 2],
+      ["G4", .5], ["G4", .5], ["G5", 1], ["E5", 1], ["C5", 1], ["B4", 1], ["A4", 2],
+      ["F5", .5], ["F5", .5], ["E5", 1], ["C5", 1], ["D5", 1], ["C5", 2]
+    ];
+
+    const BEAT = 0.44;
+
+    function ensureAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playNote(freq, start, duration) {
+      const ctx = audioCtx;
+
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0.0001, start);
+      master.gain.exponentialRampToValueAtTime(0.16, start + 0.02);
+      master.gain.exponentialRampToValueAtTime(0.0001, start + Math.max(duration * 1.7, 0.4));
+      master.connect(ctx.destination);
+
+      const osc = ctx.createOscillator();
+      osc.type = "triangle";
+      osc.frequency.value = freq;
+      osc.connect(master);
+      osc.start(start);
+      osc.stop(start + Math.max(duration * 1.8, 0.5));
+
+      const shimmer = ctx.createGain();
+      shimmer.gain.setValueAtTime(0.0001, start);
+      shimmer.gain.exponentialRampToValueAtTime(0.045, start + 0.02);
+      shimmer.gain.exponentialRampToValueAtTime(0.0001, start + Math.max(duration * 1.3, 0.3));
+      shimmer.connect(ctx.destination);
+
+      const osc2 = ctx.createOscillator();
+      osc2.type = "sine";
+      osc2.frequency.value = freq * 2;
+      osc2.connect(shimmer);
+      osc2.start(start);
+      osc2.stop(start + Math.max(duration * 1.4, 0.4));
+    }
+
+    function playMelody() {
+      ensureAudio();
+      const start = audioCtx.currentTime + 0.08;
+      let t = start;
+
+      MELODY.forEach(function (note) {
+        const duration = note[1] * BEAT;
+        playNote(NOTE[note[0]], t, duration);
+        t += duration;
+      });
+
+      clearTimeout(melodyTimer);
+      melodyTimer = setTimeout(function () {
+        if (isOpen && fallbackMode) playMelody();
+      }, (t - start + 0.6) * 1000);
+    }
+
+    function primeMusic() {
+      if (fallbackMode) {
+        ensureAudio();
+        return;
+      }
+
+      try { song.currentTime = 0; } catch (err) {}
+      song.volume = 0;
+
+      const playing = song.play();
+      if (playing && typeof playing.catch === "function") {
+        playing.catch(function () {
+          fallbackMode = true;
+          ensureAudio();
+        });
+      }
+    }
+
+    function startMusic() {
+      if (fallbackMode) {
+        playMelody();
+        return;
+      }
+
+      try { song.currentTime = 0; } catch (err) {}
+      song.volume = 0.75;
+
+      const playing = song.play();
+      if (playing && typeof playing.catch === "function") {
+        playing.catch(function () {
+          fallbackMode = true;
+          playMelody();
+        });
+      }
+    }
+
+    function stopMusic() {
+      song.pause();
+      clearTimeout(melodyTimer);
+      melodyTimer = null;
+      if (audioCtx && audioCtx.state === "running") {
+        audioCtx.suspend().catch(function () {});
+      }
+    }
+
+    const CARNATION_PALETTES = [
+      { outer: "#7b46b4", mid: "#a678d8", inner: "#cbb0e8", center: "#5a2d8a", core: "#7b46b4" },
+      { outer: "#d9a419", mid: "#f2c94c", inner: "#f9e6a0", center: "#a8720c", core: "#d9a419" }
+    ];
+
+    const CARNATION_PETAL = "M50 50 C 41 43 33 34 36 26 C 33 22 37 17 42 19 C 41 13 47 11 50 15 C 53 11 59 13 58 19 C 63 17 67 22 64 26 C 67 34 59 43 50 50 Z";
+
+    function carnationSVG(palette) {
+      let petals = "";
+      let i;
+
+      for (i = 0; i < 8; i++) {
+        petals += '<path d="' + CARNATION_PETAL + '" fill="' + palette.outer +
+          '" transform="rotate(' + (i * 45) + ' 50 50)"/>';
+      }
+      for (i = 0; i < 8; i++) {
+        petals += '<path d="' + CARNATION_PETAL + '" fill="' + palette.mid +
+          '" transform="rotate(' + (i * 45 + 22.5) + ' 50 50) translate(50 50) scale(.7) translate(-50 -50)"/>';
+      }
+      for (i = 0; i < 6; i++) {
+        petals += '<path d="' + CARNATION_PETAL + '" fill="' + palette.inner +
+          '" transform="rotate(' + (i * 60 + 12) + ' 50 50) translate(50 50) scale(.42) translate(-50 -50)"/>';
+      }
+
+      return '<svg viewBox="0 0 100 100" aria-hidden="true">' + petals +
+        '<circle cx="50" cy="50" r="7.5" fill="' + palette.center + '"/>' +
+        '<circle cx="50" cy="50" r="3.4" fill="' + palette.core + '"/>' +
+        '</svg>';
+    }
+
+    function burstCarnations() {
+      const rect = envelope.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const spread = Math.min(window.innerWidth, window.innerHeight);
+      const count = 20;
+
+      for (let i = 0; i < count; i++) {
+        const flower = document.createElement("div");
+        const palette = CARNATION_PALETTES[i % CARNATION_PALETTES.length];
+        const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.6;
+        const distance = 120 + Math.random() * spread * 0.55;
+        const size = 46 + Math.random() * 54;
+
+        flower.className = "carnation";
+        flower.innerHTML = carnationSVG(palette);
+        flower.style.left = cx + "px";
+        flower.style.top = cy + "px";
+        flower.style.width = size + "px";
+        flower.style.height = size + "px";
+        flower.style.setProperty("--dx", (Math.cos(angle) * distance * 1.15).toFixed(1) + "px");
+        flower.style.setProperty("--dy", (Math.sin(angle) * distance * 0.85 - 30).toFixed(1) + "px");
+        flower.style.setProperty("--rot", (Math.random() * 90 - 45).toFixed(0) + "deg");
+        flower.style.setProperty("--s", (0.85 + Math.random() * 0.55).toFixed(2));
+        flower.style.animationDuration = (1.1 + Math.random() * 0.45).toFixed(2) + "s";
+        flower.style.animationDelay = (Math.random() * 0.16).toFixed(2) + "s";
+
+        document.body.appendChild(flower);
+        setTimeout(function () { flower.remove(); }, 2400);
+      }
+    }
+
+    function openLetter() {
+      if (isOpen || opening) return;
+      opening = true;
+      body.classList.add("open");
+      burstCarnations();
+      primeMusic();
+
+      revealTimer = setTimeout(function () {
+        revealTimer = null;
+        opening = false;
+        isOpen = true;
+        body.classList.add("reveal");
+        startMusic();
+      }, 1500);
+    }
+
+    function closeLetter() {
+      if (!isOpen && !opening) return;
+      opening = false;
+      isOpen = false;
+      clearTimeout(revealTimer);
+      revealTimer = null;
+      body.classList.remove("open", "reveal");
+      stopMusic();
+    }
+
+    envelope.addEventListener("click", openLetter);
+    envelope.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openLetter();
+      }
+    });
+
+    overlay.addEventListener("click", function (event) {
+      if (event.target === overlay) closeLetter();
+    });
+
+    closeBtn.addEventListener("click", closeLetter);
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeLetter();
+    });
+  </script>
+</body>
+</html>
